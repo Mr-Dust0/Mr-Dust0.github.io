@@ -80,4 +80,4 @@ the `python3 exp.py /var/www/pilgrimage.htb/shrunk/6561bb2e1406b.png 10.10.14.3 
 ` with exp.py being the exploit from the rce and then copy the created image to the /var/www/pilgrimage.htb/shrunk directory
 so that it triggers the inotify event create and executes the script and gives us a root privileges.
 
-![img_8.png](img_8.png)
+![img_8.png](/assets/img/pilgrimage/img_8.png)
