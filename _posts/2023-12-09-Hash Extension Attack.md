@@ -27,7 +27,6 @@ data is correct so that the new appended data is in a new block.
 
 ![img_9.png](/assets/img/Hash_ext/img_9.png)
 
-
 In the image above H = Hash(M<sub>1</sub> || M<sub>2</sub>) is the original hash without the appended data, so we know that 
 will be the internal state passed to the last compresses function if the padding is correct. The padding needs to be correct
 because the hash functions works in blocks so if the appended data is not in a new block it will change the original internal state because the data that is being 
