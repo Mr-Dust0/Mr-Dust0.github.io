@@ -24,7 +24,10 @@ As the hash that is outputted is just the internal state of the hash function wh
 So the output of the original data without the appended data is the 2nd  to last internal state passed into the function with the appended data
 and hence we can create the hash with the appended data because we know the internal state that will be used with the appended data as long as padding the 
 data is correct so that the new appended data is in a new block.
+
 ![img_9.png](/assets/img/Hash_ext/img_9.png)
+
+
 In the image above H = Hash(M<sub>1</sub> || M<sub>2</sub>) is the original hash without the appended data, so we know that 
 will be the internal state passed to the last compresses function if the padding is correct. The padding needs to be correct
 because the hash functions works in blocks so if the appended data is not in a new block it will change the original internal state because the data that is being 
