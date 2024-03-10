@@ -1,0 +1,2322 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- `site.alt_lang` can specify a language different from the UI -->
+<html lang="en" >
+  <!-- The Head -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
+    >
+    <h1> Hello </h1>
+  
+    
+  
+    
+  
+    
+      <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="FAT" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="FAT (file allocation table) The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However, it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only really relies on two data structures the file allocation table and the directory entries which reduces the size and complexity needed to support it in the operating system kernel. General The basic idea of a FAT file system is that each file and directory is allocated a data structure called a directory entry (32 byte in length) that contains the starting address, file name, size, file content and other pieces of metadata. The data in the FAT file system is stored in a data unit called a cluster (like ntfs) if the data in a file or directory needs more than one cluster to contain all the data the other clusters needed to store the data are found in the file allocation table. This file allocation data structure is used to identify the next cluster in a file or directory and is also used to identity the allocation status of the cluster (if it is already being used or not)." />
+<meta property="og:description" content="FAT (file allocation table) The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However, it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only really relies on two data structures the file allocation table and the directory entries which reduces the size and complexity needed to support it in the operating system kernel. General The basic idea of a FAT file system is that each file and directory is allocated a data structure called a directory entry (32 byte in length) that contains the starting address, file name, size, file content and other pieces of metadata. The data in the FAT file system is stored in a data unit called a cluster (like ntfs) if the data in a file or directory needs more than one cluster to contain all the data the other clusters needed to store the data are found in the file allocation table. This file allocation data structure is used to identify the next cluster in a file or directory and is also used to identity the allocation status of the cluster (if it is already being used or not)." />
+<link rel="canonical" href="http://localhost:4000/posts/FAT-filesystem-explained/" />
+<meta property="og:url" content="http://localhost:4000/posts/FAT-filesystem-explained/" />
+<meta property="og:site_name" content="Chirpy" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-04T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="FAT" />
+<meta name="twitter:site" content="@twitter_username" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-03-04T00:00:00+00:00","datePublished":"2024-03-04T00:00:00+00:00","description":"FAT (file allocation table) The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However, it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only really relies on two data structures the file allocation table and the directory entries which reduces the size and complexity needed to support it in the operating system kernel. General The basic idea of a FAT file system is that each file and directory is allocated a data structure called a directory entry (32 byte in length) that contains the starting address, file name, size, file content and other pieces of metadata. The data in the FAT file system is stored in a data unit called a cluster (like ntfs) if the data in a file or directory needs more than one cluster to contain all the data the other clusters needed to store the data are found in the file allocation table. This file allocation data structure is used to identify the next cluster in a file or directory and is also used to identity the allocation status of the cluster (if it is already being used or not).","headline":"FAT","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/FAT-filesystem-explained/"},"url":"http://localhost:4000/posts/FAT-filesystem-explained/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+  
+    <title>FAT | Chirpy
+    </title>
+  
+    <!--
+  The Favicons for Web, Android, Microsoft, and iOS (iPhone and iPad) Apps
+  Generated by: https://realfavicongenerator.net/
+-->
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png">
+
+  <link rel="manifest" href="/assets/img/favicons/site.webmanifest">
+
+<link rel="shortcut icon" href="/assets/img/favicons/favicon.ico">
+<meta name="apple-mobile-web-app-title" content="Chirpy">
+<meta name="application-name" content="Chirpy">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+  
+    
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com" >
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+      
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin>
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com" >
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+      
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" >
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
+      
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" >
+        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" >
+      
+  
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+    
+  
+    <!-- GA -->
+    
+  
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+  
+    <link rel="stylesheet" href="/assets/css/jekyll-theme-chirpy.css">
+  
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.25.0/dist/tocbot.min.css">
+    
+  
+    
+      <!-- Manific Popup -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css">
+    
+  
+    <!-- JavaScript -->
+  
+    
+      <!-- Switch the mode between dark and light. -->
+
+<script type="text/javascript">
+  class ModeToggle {
+    static get MODE_KEY() {
+      return 'mode';
+    }
+    static get MODE_ATTR() {
+      return 'data-mode';
+    }
+    static get DARK_MODE() {
+      return 'dark';
+    }
+    static get LIGHT_MODE() {
+      return 'light';
+    }
+    static get ID() {
+      return 'mode-toggle';
+    }
+
+    constructor() {
+      if (this.hasMode) {
+        if (this.isDarkMode) {
+          if (!this.isSysDarkPrefer) {
+            this.setDark();
+          }
+        } else {
+          if (this.isSysDarkPrefer) {
+            this.setLight();
+          }
+        }
+      }
+
+      let self = this;
+
+      /* always follow the system prefers */
+      this.sysDarkPrefers.addEventListener('change', () => {
+        if (self.hasMode) {
+          if (self.isDarkMode) {
+            if (!self.isSysDarkPrefer) {
+              self.setDark();
+            }
+          } else {
+            if (self.isSysDarkPrefer) {
+              self.setLight();
+            }
+          }
+
+          self.clearMode();
+        }
+
+        self.notify();
+      });
+    } /* constructor() */
+
+    get sysDarkPrefers() {
+      return window.matchMedia('(prefers-color-scheme: dark)');
+    }
+
+    get isSysDarkPrefer() {
+      return this.sysDarkPrefers.matches;
+    }
+
+    get isDarkMode() {
+      return this.mode === ModeToggle.DARK_MODE;
+    }
+
+    get isLightMode() {
+      return this.mode === ModeToggle.LIGHT_MODE;
+    }
+
+    get hasMode() {
+      return this.mode != null;
+    }
+
+    get mode() {
+      return sessionStorage.getItem(ModeToggle.MODE_KEY);
+    }
+
+    /* get the current mode on screen */
+    get modeStatus() {
+      if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer)) {
+        return ModeToggle.DARK_MODE;
+      } else {
+        return ModeToggle.LIGHT_MODE;
+      }
+    }
+
+    setDark() {
+      document.documentElement.setAttribute(ModeToggle.MODE_ATTR, ModeToggle.DARK_MODE);
+      sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE);
+    }
+
+    setLight() {
+      document.documentElement.setAttribute(ModeToggle.MODE_ATTR, ModeToggle.LIGHT_MODE);
+      sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE);
+    }
+
+    clearMode() {
+      document.documentElement.removeAttribute(ModeToggle.MODE_ATTR);
+      sessionStorage.removeItem(ModeToggle.MODE_KEY);
+    }
+
+    /* Notify another plugins that the theme mode has changed */
+    notify() {
+      window.postMessage(
+        {
+          direction: ModeToggle.ID,
+          message: this.modeStatus
+        },
+        '*'
+      );
+    }
+
+    flipMode() {
+      if (this.hasMode) {
+        if (this.isSysDarkPrefer) {
+          if (this.isLightMode) {
+            this.clearMode();
+          } else {
+            this.setLight();
+          }
+        } else {
+          if (this.isDarkMode) {
+            this.clearMode();
+          } else {
+            this.setDark();
+          }
+        }
+      } else {
+        if (this.isSysDarkPrefer) {
+          this.setLight();
+        } else {
+          this.setDark();
+        }
+      }
+
+      this.notify();
+    } /* flipMode() */
+  } /* ModeToggle */
+
+  const modeToggle = new ModeToggle();
+</script>
+
+    
+  
+    <!-- A placeholder to allow defining custom metadata -->
+
+  </head>
+
+  <body>
+    <!-- The Side Bar -->
+
+<aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
+  <header class="profile-wrapper">
+    <a href="/" id="avatar" class="rounded-circle"></a>
+
+    <h1 class="site-title">
+      <a href="/">Chirpy</a>
+    </h1>
+    <p class="site-subtitle fst-italic mb-0">A text-focused Jekyll theme</p>
+  </header>
+  <!-- .profile-wrapper -->
+
+  <nav class="flex-column flex-grow-1 w-100 ps-0">
+    <ul class="nav">
+      <!-- home -->
+      <li class="nav-item">
+        <a href="/" class="nav-link">
+          <i class="fa-fw fas fa-home"></i>
+          <span>HOME</span>
+        </a>
+      </li>
+      <!-- the real tabs -->
+      
+        <li class="nav-item">
+          <a href="/categories/" class="nav-link">
+            <i class="fa-fw fas fa-stream"></i>
+            
+
+            <span>CATEGORIES</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/tags/" class="nav-link">
+            <i class="fa-fw fas fa-tags"></i>
+            
+
+            <span>TAGS</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/archives/" class="nav-link">
+            <i class="fa-fw fas fa-archive"></i>
+            
+
+            <span>ARCHIVES</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+        <li class="nav-item">
+          <a href="/about/" class="nav-link">
+            <i class="fa-fw fas fa-info-circle"></i>
+            
+
+            <span>ABOUT</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+      
+    </ul>
+  </nav>
+
+  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
+    
+      <button type="button" class="mode-toggle btn" aria-label="Switch Mode">
+        <i class="fas fa-adjust"></i>
+      </button>
+
+      
+        <span class="icon-border"></span>
+      
+    
+
+    
+      
+
+      
+        <a
+          href="https://github.com/github_username"
+          aria-label="github"
+          
+
+          
+            target="_blank"
+            
+          
+
+          
+
+          
+            rel="noopener noreferrer"
+          
+        >
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+      
+
+      
+        <a
+          href="https://twitter.com/twitter_username"
+          aria-label="twitter"
+          
+
+          
+            target="_blank"
+            
+          
+
+          
+
+          
+            rel="noopener noreferrer"
+          
+        >
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+      
+    
+      
+
+      
+        <a
+          href="javascript:location.href = 'mailto:' + ['example','domain.com'].join('@')"
+          aria-label="email"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-envelope"></i>
+        </a>
+      
+    
+      
+
+      
+        <a
+          href="/feed.xml"
+          aria-label="rss"
+          
+
+          
+
+          
+
+          
+        >
+          <i class="fas fa-rss"></i>
+        </a>
+      
+    
+  </div>
+  <!-- .sidebar-bottom -->
+</aside>
+<!-- #sidebar -->
+
+
+    <div id="main-wrapper" class="d-flex justify-content-center">
+      <div class="container d-flex flex-column px-xxl-5">
+        <!-- The Top Bar -->
+
+<header id="topbar-wrapper" aria-label="Top Bar">
+  <div
+    id="topbar"
+    class="d-flex align-items-center justify-content-between px-lg-3 h-100"
+  >
+    <nav id="breadcrumb" aria-label="Breadcrumb">
+      
+
+      
+        
+          
+            <span>
+              <a href="/">Home</a>
+            </span>
+
+          
+        
+          
+        
+          
+            
+              <span>FAT</span>
+            
+
+          
+        
+      
+    </nav>
+    <!-- endof #breadcrumb -->
+
+    <button type="button" id="sidebar-trigger" class="btn btn-link">
+      <i class="fas fa-bars fa-fw"></i>
+    </button>
+
+    <div id="topbar-title">
+      Post
+    </div>
+
+    <button type="button" id="search-trigger" class="btn btn-link">
+      <i class="fas fa-search fa-fw"></i>
+    </button>
+
+    <search class="align-items-center ms-3 ms-lg-0">
+      <i class="fas fa-search fa-fw"></i>
+      <input
+        class="form-control"
+        id="search-input"
+        type="search"
+        aria-label="search"
+        autocomplete="off"
+        placeholder="Search..."
+      >
+    </search>
+    <button type="button" class="btn btn-link text-decoration-none" id="search-cancel">Cancel</button>
+  </div>
+</header>
+
+
+        <div class="row flex-grow-1">
+          <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            
+              <!-- Refactor the HTML structure -->
+
+
+
+<!--
+  In order to allow a wide table to scroll horizontally,
+  we suround the markdown table with `<div class="table-wrapper">` and `</div>`
+-->
+
+
+
+<!--
+  Fixed kramdown code highlight rendering:
+  https://github.com/penibelst/jekyll-compress-html/issues/101
+  https://github.com/penibelst/jekyll-compress-html/issues/71#issuecomment-188144901
+-->
+
+
+
+<!-- Change the icon of checkbox -->
+
+
+
+<!-- Handle images -->
+
+
+
+
+  
+  
+
+  
+    
+      
+      
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+    
+
+    
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+      
+
+      
+    
+
+    <!-- take out classes -->
+    
+
+    
+    
+
+    
+
+    
+      
+    
+
+    <!-- lazy-load images -->
+    
+
+    
+      <!-- make sure the `<img>` is wrapped by `<a>` -->
+      
+
+      
+        <!-- create the image wrapper -->
+        
+
+        
+        
+      
+    
+
+    <!-- combine -->
+    
+  
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+    
+
+    
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+      
+
+      
+    
+
+    <!-- take out classes -->
+    
+
+    
+    
+
+    
+
+    
+      
+    
+
+    <!-- lazy-load images -->
+    
+
+    
+      <!-- make sure the `<img>` is wrapped by `<a>` -->
+      
+
+      
+        <!-- create the image wrapper -->
+        
+
+        
+        
+      
+    
+
+    <!-- combine -->
+    
+  
+
+  
+
+
+<!-- Add header for code snippets -->
+
+
+
+<!-- Create heading anchors -->
+
+
+
+
+
+  
+  
+
+  
+    
+    
+
+    
+      
+        
+        
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+      
+      
+
+      
+    
+
+    
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+
+
+
+
+<!-- return -->
+
+
+
+
+<article class="px-1">
+  <header>
+    <h1 data-toc-skip>FAT</h1>
+
+    <div class="post-meta text-muted">
+      <!-- published date -->
+      <span>
+        Posted
+        <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+<time
+  
+  data-ts="1709510400"
+  data-df="ll"
+  
+    data-bs-toggle="tooltip" data-bs-placement="bottom"
+  
+>
+  Mar  4, 2024
+</time>
+
+      </span>
+
+      <!-- lastmod date -->
+      
+
+      
+
+      <div class="d-flex justify-content-between">
+        <!-- author(s) -->
+        <span>
+          
+
+          By
+
+          <em>
+            
+              <a href="https://twitter.com/username">your_full_name</a>
+            
+          </em>
+        </span>
+
+        <!-- read time -->
+        <!-- Calculate the post's reading time, and display the word count in tooltip -->
+
+
+
+<!-- words per minute -->
+
+
+
+
+
+
+
+
+
+
+<!-- return element -->
+<span
+  class="readtime"
+  data-bs-toggle="tooltip"
+  data-bs-placement="bottom"
+  title="878 words"
+>
+  <em>4 min</em> read</span>
+
+      </div>
+      <!-- .d-flex -->
+    </div>
+    <!-- .post-meta -->
+  </header>
+
+  <div class="content">
+    <h1 id="fat-file-allocation-table">FAT (file allocation table)</h1>
+<p>The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However,
+it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and 
+is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only 
+really relies on two data structures the file allocation table and the directory entries which reduces the size and complexity
+needed to support it in the operating system kernel.</p>
+<h2 id="general"><span class="me-2">General</span><a href="#general" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+<p>The basic idea of a FAT file system is that each file and directory is allocated a data structure called a directory entry
+(32 byte in length) that contains the starting address, file name, size, file content and other pieces of metadata. The data
+in the FAT file system is stored in a data unit called a cluster (like ntfs) if the data in a file or directory needs more than one cluster
+to contain all the data the other clusters needed to store the data are found in the file allocation table. This file allocation data structure is used to identify 
+the next cluster in a file or directory and is also used to identity the allocation status of the cluster (if it is already being
+used or not).</p>
+
+<p><a href="/assets/img/FAT/img_11.png" class="popup img-link  shimmer"><img src="/assets/img/FAT/img_11.png" alt="img_11.png" loading="lazy"></a></p>
+
+<p>In the example above the name.png points to the 4th cluster which means we look at the 4th entry in the fat to see if there are any more 
+clusters needed for the file. The 4th entry in the points to the fat entry 10 which means that the file always uses cluster
+10 to store data and that points to 1st entry and then the first entry points to the 3rd entry which is negative one which is
+a end of file (eof) marker. So we know that name.png uses clusters 4,10,1,3 to store its data.</p>
+
+<h2 id="directory-entry-data-structure"><span class="me-2">Directory entry data structure</span><a href="#directory-entry-data-structure" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+<p>The directory entry is a data structure that is allocated for every file and directory. It is 32 bytes in size and contains the file’s attributes, size, starting cluster, and dates and times.</p>
+
+<p><a href="/assets/img/FAT/img_12.png" class="popup img-link  shimmer"><img src="/assets/img/FAT/img_12.png" alt="img_12.png" loading="lazy"></a></p>
+
+<p>The image above is the structure of a directory entry in FAT. The first byte in the directory entry can show if the file or directory has been deleted
+which can help searching for files that have been deleted but not yet overwritten. Also, can see what data the file used by looking
+at bytes 26-27 to see the address of the first cluster and then follow the file allocation table to see what other clusters where being used 
+by the file however if the cluster has been reallocated this can show a false presentation of the deleted file and make recovery of the original data nearly impossible.</p>
+
+<h2 id="file-allocation-table-data-structure"><span class="me-2">File allocation table data structure</span><a href="#file-allocation-table-data-structure" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+<p>There are normally two file allocation tables in a file system with one being for backup if the original file allocation table
+gets corrupted but the exact number is given in the boot sector the file allocation table. The total size of each File allocation table
+is given in the boot sector.The table consists of equal-sized entries and has no header or footer values which can make it more
+difficult to search in file systems because it has no magic values. The size of each entry depends on the file system version
+with FAT12 having 12 bit entries, FAT16 having 16 bit entries and FAT32 having 32 bit entries. The entries of the File allocation
+table start from zero with each entry’s address corresponding to the cluster with the same address. Entry’s with 0 in them mean
+they are not allocated to a file if an Entry is allocated it will be a non-zero and will the address of the next cluster in the file or
+directory. The last cluster in the file corresponding file allocation table will contain an end of file value which is a large
+value like 0xffff.</p>
+<h2 id="fat-maximum-sizes"><span class="me-2">FAT Maximum sizes</span><a href="#fat-maximum-sizes" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+<p>The maximum cluster size in a FAT file system is 64KB. And because in FAT12 only 12 bit are used for
+the entry in the File allocation table which means the maximum address is 2<sup>12</sup> = 4096 and 12 clusters are reversed
+for things like boot code and the file allocation itself the maximum size of FAT12 file system is 4084 * 64kb which is around
+256MB which is nothing in today’s world which shows why the FAT file system was replaced by the NTFS file system which can 
+support larger file systems and has more advanced features like more attributes and more logging. The maximum size of an FAT16 filesystem is FAT16: 4GB (for 64kB clusters) because it 
+has 4 more bits for addresses. Even if the size was good the fact that clusters have to be 64kb means that the space won’t
+be used up efficiently and there will be alot of wasted space in the file system.
+The FAT32 has a maximum of 2TB (512B sectors) which is alot better but still is not big enough and FAT doesn’t support advanced 
+features like journaling which means that it is not used as a primary computer file system in today’s world.</p>
+
+  </div>
+
+  <div class="post-tail-wrapper text-muted">
+    <!-- categories -->
+    
+      <div class="post-meta mb-3">
+        <i class="far fa-folder-open fa-fw me-1"></i>
+        
+          <a href="/categories/file-system/">File System</a>
+      </div>
+    
+
+    <!-- tags -->
+    
+      <div class="post-tags">
+        <i class="fa fa-tags fa-fw me-1"></i>
+        
+          <a
+            href="/tags/fat/"
+            class="post-tag no-text-decoration"
+          >FAT</a>
+        
+          <a
+            href="/tags/forensics/"
+            class="post-tag no-text-decoration"
+          >Forensics</a>
+        
+      </div>
+    
+
+    <div
+      class="
+        post-tail-bottom
+        d-flex justify-content-between align-items-center mt-5 pb-2
+      "
+    >
+      <div class="license-wrapper">
+        
+          
+
+          This post is licensed under 
+        <a href="https://creativecommons.org/licenses/by/4.0/">
+          CC BY 4.0
+        </a>
+         by the author.
+        
+      </div>
+
+      <!-- Post sharing snippet -->
+
+<div class="share-wrapper d-flex align-items-center">
+  <span class="share-label text-muted">Share</span>
+  <span class="share-icons">
+    
+    
+    
+
+    
+
+      
+
+      <a href="https://twitter.com/intent/tweet?text=FAT%20-%20Chirpy&url=http%3A%2F%2Flocalhost%3A4000%2Fposts%2FFAT-filesystem-explained%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Twitter" aria-label="Twitter">
+        <i class="fa-fw fa-brands fa-square-x-twitter"></i>
+      </a>
+    
+
+      
+
+      <a href="https://www.facebook.com/sharer/sharer.php?title=FAT%20-%20Chirpy&u=http%3A%2F%2Flocalhost%3A4000%2Fposts%2FFAT-filesystem-explained%2F" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Facebook" aria-label="Facebook">
+        <i class="fa-fw fab fa-facebook-square"></i>
+      </a>
+    
+
+      
+
+      <a href="https://t.me/share/url?url=http%3A%2F%2Flocalhost%3A4000%2Fposts%2FFAT-filesystem-explained%2F&text=FAT%20-%20Chirpy" target="_blank" rel="noopener" data-bs-toggle="tooltip" data-bs-placement="top" title="Telegram" aria-label="Telegram">
+        <i class="fa-fw fab fa-telegram"></i>
+      </a>
+    
+
+    <button
+      id="copy-link"
+      aria-label="Copy link"
+      class="btn small"
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title="Copy link"
+      data-title-succeed="Link copied successfully!"
+    >
+      <i class="fa-fw fas fa-link pe-none fs-6"></i>
+    </button>
+  </span>
+</div>
+
+    </div>
+    <!-- .post-tail-bottom -->
+  </div>
+  <!-- div.post-tail-wrapper -->
+</article>
+
+
+            
+          </main>
+
+          <!-- panel -->
+          <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 mb-5 text-muted">
+            <div class="access">
+              <!-- Get 5 last posted/updated posts -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <section id="access-lastmod">
+    <h2 class="panel-heading">Recently Updated</h2>
+    <ul class="content list-unstyled ps-0 pb-1 ms-1 mt-2">
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/FAT-filesystem-explained/">FAT</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/NTFS-filesystem-explained/">MFT</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/Hash-Extension-Attack/">Hash Extension Attack</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/Pilgrimage/">Pilgrimage</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/Sandworm/">Sandworm</a>
+        </li>
+      
+    </ul>
+  </section>
+  <!-- #access-lastmod -->
+
+
+              <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+
+
+  <section>
+    <h2 class="panel-heading">Trending Tags</h2>
+    <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/ctf/">ctf</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/forensics/">Forensics</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/cve-2022-31214/">CVE-2022-31214</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/cve-2022-44268/">CVE-2022-44268</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/cve-2022-4510/">CVE-2022-4510</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/fat/">FAT</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/git/">git</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/hash-extension/">Hash Extension</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/merkle-damgard-construction/">Merkle Damgard construction</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/mft/">MFT</a>
+      
+    </div>
+  </section>
+
+
+            </div>
+
+            
+              
+              
+
+
+
+  <section id="toc-wrapper" class="ps-0 pe-4">
+    <h2 class="panel-heading ps-3 pt-2 mb-2">Contents</h2>
+    <nav id="toc"></nav>
+  </section>
+
+
+            
+          </aside>
+        </div>
+
+        <div class="row">
+          <!-- tail -->
+          <div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            
+              
+              <!-- Recommend the other 3 posts according to the tags and categories of the current post. -->
+
+<!-- The total size of related posts -->
+
+
+<!-- An random integer that bigger than 0 -->
+
+
+<!-- Equals to TAG_SCORE / {max_categories_hierarchy} -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <aside id="related-posts" aria-labelledby="related-label">
+    <h3 class="mb-4" id="related-label">Further Reading</h3>
+    <nav class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">
+      
+        <article class="col">
+          <a href="/posts/NTFS-filesystem-explained/" class="post-preview card h-100">
+            <div class="card-body">
+              <!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+
+
+
+<time
+  
+  data-ts="1709078400"
+  data-df="ll"
+  
+>
+  Feb 28, 2024
+</time>
+
+              <h4 class="pt-0 my-2">MFT</h4>
+              <div class="text-muted">
+                <p>
+                  
+
+
+
+
+
+                  MFT
+General
+A feature of NTFS that sets it apart from other file systems is that the entire file system is considered data area which
+means that any sector can be allocated to a file.The only layou...
+                </p>
+              </div>
+            </div>
+          </a>
+        </article>
+      
+    </nav>
+  </aside>
+  <!-- #related-posts -->
+
+
+            
+              
+              <!-- Navigation buttons at the bottom of the post. -->
+
+<nav class="post-navigation d-flex justify-content-between" aria-label="Post Navigation">
+  
+  
+
+  
+    <a
+      href="/posts/NTFS-filesystem-explained/"
+      class="btn btn-outline-primary"
+      aria-label="Older"
+    >
+      <p>MFT</p>
+    </a>
+  
+
+  
+    <div class="btn btn-outline-primary disabled" aria-label="Newer">
+      <p>-</p>
+    </div>
+  
+</nav>
+
+            
+              
+              <!--  The comments switcher -->
+
+
+            
+
+            <!-- The Footer -->
+
+<footer
+  aria-label="Site Info"
+  class="
+    d-flex flex-column justify-content-center text-muted
+    flex-lg-row justify-content-lg-between align-items-lg-center pb-lg-3
+  "
+>
+  <p>©
+    <time>2024</time>
+
+    
+      <a href="https://twitter.com/username">your_full_name</a>.
+    
+
+    
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author."
+      >Some rights reserved.</span>
+    
+  </p>
+
+  <p>Using the <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme for <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a>.
+  </p>
+</footer>
+
+          </div>
+        </div>
+
+        <!-- The Search results -->
+
+<div id="search-result-wrapper" class="d-flex justify-content-center unloaded">
+  <div class="col-11 content">
+    <div id="search-hints">
+      <!-- The trending tags list -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+
+
+  <section>
+    <h2 class="panel-heading">Trending Tags</h2>
+    <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/ctf/">ctf</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/forensics/">Forensics</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/cve-2022-31214/">CVE-2022-31214</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/cve-2022-44268/">CVE-2022-44268</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/cve-2022-4510/">CVE-2022-4510</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/fat/">FAT</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/git/">git</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/hash-extension/">Hash Extension</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/merkle-damgard-construction/">Merkle Damgard construction</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/mft/">MFT</a>
+      
+    </div>
+  </section>
+
+
+    </div>
+    <div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div>
+  </div>
+</div>
+
+      </div>
+
+      <aside aria-label="Scroll to Top">
+        <button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow">
+          <i class="fas fa-angle-up"></i>
+        </button>
+      </aside>
+    </div>
+
+    <div id="mask"></div>
+
+    
+      <aside
+  id="notification"
+  class="toast"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+  data-bs-animation="true"
+  data-bs-autohide="false"
+>
+  <div class="toast-header">
+    <button
+      type="button"
+      class="btn-close ms-auto"
+      data-bs-dismiss="toast"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="toast-body text-center pt-0">
+    <p class="px-2 mb-3">A new version of content is available.</p>
+    <button type="button" class="btn btn-primary" aria-label="Update">
+      Update
+    </button>
+  </div>
+</aside>
+
+    
+
+    <!-- JavaScripts -->
+
+    <!-- JS selector for site. -->
+
+<!-- commons -->
+
+
+
+<!-- layout specified -->
+
+
+
+
+  
+
+  
+    <!-- image lazy-loading & popup & clipboard -->
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+
+
+  <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.7.1/dist/jquery.min.js,npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js,npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js,npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.umd.min.js,npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js,npm/clipboard@2.0.11/dist/clipboard.min.js,npm/dayjs@1.11.10/dayjs.min.js,npm/dayjs@1.11.10/locale/en.min.js,npm/dayjs@1.11.10/plugin/relativeTime.min.js,npm/dayjs@1.11.10/plugin/localizedFormat.min.js,npm/tocbot@4.25.0/dist/tocbot.min.js"></script>
+
+
+
+
+
+
+<script defer src="/assets/js/dist/post.min.js"></script>
+
+
+
+
+
+
+    
+
+    <!--
+  Jekyll Simple Search loader
+  See: <https://github.com/christian-fei/Simple-Jekyll-Search>
+-->
+
+
+
+
+
+<script>
+  /* Note: dependent library will be loaded in `js-selector.html` */
+  SimpleJekyllSearch({
+    searchInput: document.getElementById('search-input'),
+    resultsContainer: document.getElementById('search-results'),
+    json: '/assets/js/data/search.json',
+    searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{snippet}</p>  </article>',
+    noResultsText: '<p class="mt-5"></p>',
+    templateMiddleware: function(prop, value, template) {
+      if (prop === 'categories') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+        }
+      }
+
+      if (prop === 'tags') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+        }
+      }
+    }
+  });
+</script>
+
+  </body>
+</html>
+
