@@ -5,6 +5,16 @@ published: true
 categories: ["File System"]
 tags: ["FAT", "Forensics"]
 ---
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PDJMTCGM1Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PDJMTCGM1Q');
+</script>
+
 # FAT (file allocation table)
 The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However,
 it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and 

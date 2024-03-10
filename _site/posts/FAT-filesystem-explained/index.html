@@ -38,8 +38,8 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="FAT" />
 <meta property="og:locale" content="en" />
-<meta name="description" content="FAT (file allocation table) The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However, it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only really relies on two data structures the file allocation table and the directory entries which reduces the size and complexity needed to support it in the operating system kernel. General The basic idea of a FAT file system is that each file and directory is allocated a data structure called a directory entry (32 byte in length) that contains the starting address, file name, size, file content and other pieces of metadata. The data in the FAT file system is stored in a data unit called a cluster (like ntfs) if the data in a file or directory needs more than one cluster to contain all the data the other clusters needed to store the data are found in the file allocation table. This file allocation data structure is used to identify the next cluster in a file or directory and is also used to identity the allocation status of the cluster (if it is already being used or not)." />
-<meta property="og:description" content="FAT (file allocation table) The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However, it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only really relies on two data structures the file allocation table and the directory entries which reduces the size and complexity needed to support it in the operating system kernel. General The basic idea of a FAT file system is that each file and directory is allocated a data structure called a directory entry (32 byte in length) that contains the starting address, file name, size, file content and other pieces of metadata. The data in the FAT file system is stored in a data unit called a cluster (like ntfs) if the data in a file or directory needs more than one cluster to contain all the data the other clusters needed to store the data are found in the file allocation table. This file allocation data structure is used to identify the next cluster in a file or directory and is also used to identity the allocation status of the cluster (if it is already being used or not)." />
+<meta name="description" content="A minimal, responsive and feature-rich Jekyll theme for technical writing." />
+<meta property="og:description" content="A minimal, responsive and feature-rich Jekyll theme for technical writing." />
 <link rel="canonical" href="http://localhost:4000/posts/FAT-filesystem-explained/" />
 <meta property="og:url" content="http://localhost:4000/posts/FAT-filesystem-explained/" />
 <meta property="og:site_name" content="Chirpy" />
@@ -49,7 +49,7 @@
 <meta property="twitter:title" content="FAT" />
 <meta name="twitter:site" content="@twitter_username" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-03-04T00:00:00+00:00","datePublished":"2024-03-04T00:00:00+00:00","description":"FAT (file allocation table) The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However, it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only really relies on two data structures the file allocation table and the directory entries which reduces the size and complexity needed to support it in the operating system kernel. General The basic idea of a FAT file system is that each file and directory is allocated a data structure called a directory entry (32 byte in length) that contains the starting address, file name, size, file content and other pieces of metadata. The data in the FAT file system is stored in a data unit called a cluster (like ntfs) if the data in a file or directory needs more than one cluster to contain all the data the other clusters needed to store the data are found in the file allocation table. This file allocation data structure is used to identify the next cluster in a file or directory and is also used to identity the allocation status of the cluster (if it is already being used or not).","headline":"FAT","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/FAT-filesystem-explained/"},"url":"http://localhost:4000/posts/FAT-filesystem-explained/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-03-04T00:00:00+00:00","datePublished":"2024-03-04T00:00:00+00:00","description":"A minimal, responsive and feature-rich Jekyll theme for technical writing.","headline":"FAT","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/FAT-filesystem-explained/"},"url":"http://localhost:4000/posts/FAT-filesystem-explained/"}</script>
 <!-- End Jekyll SEO tag -->
 
     
@@ -842,7 +842,18 @@
   </header>
 
   <div class="content">
-    <h1 id="fat-file-allocation-table">FAT (file allocation table)</h1>
+    <!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-PDJMTCGM1Q"></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PDJMTCGM1Q');
+</script>
+
+<h1 id="fat-file-allocation-table">FAT (file allocation table)</h1>
 <p>The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However,
 it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and 
 is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is simple because it only 

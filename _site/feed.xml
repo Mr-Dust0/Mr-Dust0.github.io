@@ -4,7 +4,7 @@
   <id>http://localhost:4000/</id>
   <title>Chirpy</title>
   <subtitle>A minimal, responsive and feature-rich Jekyll theme for technical writing.</subtitle>
-  <updated>2024-03-10T10:27:55+00:00</updated>
+  <updated>2024-03-10T10:59:11+00:00</updated>
   <author>
     <name>your_full_name</name>
     <uri>http://localhost:4000/</uri>
@@ -46,10 +46,15 @@
 
 
 
-      FAT (file allocation table)
+      
+
+
+
+
+FAT (file allocation table)
 The file allocation table (FAT) file system was originally developed in 1977 for use on floppy disks and the windows 9x operating systems. However,
 it is still in use today in removable storage devices like usbs this is because fat has a relatively small overhead and 
-is supported by all the operating systems, so it is a good medium to move around data. Also, Fat is ...
+is supported by all the operating systems, so it is a good medium to move around data. Also, Fa...
     </summary>
   
 
